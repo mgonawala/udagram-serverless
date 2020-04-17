@@ -1,0 +1,133 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Udacity C4 Project",
+		"_postman_id": "f2b69b1f-1a02-bfd9-051b-8bc0fae1e662",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TODOs",
+			"description": "",
+			"item": [
+				{
+					"name": "Get all todos",
+					"request": {
+						"url": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/todos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create todo",
+					"request": {
+						"url": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/todos",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Water flowers\",\n\t\"dueDate\": \"2019-06-11\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update todo",
+					"request": {
+						"url": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/todos/8f317243-d6ac-4612-b7e3-f856ff7156c5",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Change the world\",\n\t\"dueDate\": \"2019-12-11\",\n\t\"done\": true\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete todo",
+					"request": {
+						"url": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/todos/8f317243-d6ac-4612-b7e3-f856ff7156c5",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get attachment URL",
+					"request": {
+						"url": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/todos/8f317243-d6ac-4612-b7e3-f856ff7156c5/attachment",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
