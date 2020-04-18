@@ -36,8 +36,8 @@ provider:
   region: ${opt:region, 'us-east-1'}
 
   environment:
-    TODO_TABLE: Todo-${self:provider.stage}
-    INDEX_NAME: Todo-Index
+    TODO_TABLE: Todo-v2-${self:provider.stage}
+    INDEX_NAME: Todo-v2-Index
     IMAGES_BUCKET: todo-images-bucket-6uyt-${self:provider.stage}
     URL_EXPIRATION_TIME: 3600
 
@@ -131,6 +131,10 @@ functions:
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}
       - Effect: Allow
         Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}/index/${self:provider.environment.INDEX_NAME}
+      - Effect: Allow
+        Action:
           - xray:PutTraceSegments
           - xray:PutTelemetryRecords
         Resource: "*"
@@ -161,6 +165,10 @@ functions:
           - xray:PutTraceSegments
           - xray:PutTelemetryRecords
         Resource: "*"
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}/index/${self:provider.environment.INDEX_NAME}
     events:
       - http:
           method: delete
@@ -180,6 +188,10 @@ functions:
           - dynamodb:UpdateItem
           - dynamodb:DeleteItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}/index/${self:provider.environment.INDEX_NAME}
       - Effect: Allow
         Action:
           - s3:PutObject

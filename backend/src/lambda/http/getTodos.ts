@@ -8,7 +8,6 @@ import {getStatusCode} from "../utils";
 const logger = createLogger('get-todos');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-
   const userId = getUserId(event);
   try {
     logger.info('Get To-do items of user', {userId: userId});

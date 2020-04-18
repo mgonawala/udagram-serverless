@@ -23,18 +23,17 @@ export class TodoAccess{
 
   async getAllTodos(userId: string) : Promise<TodoItem[]>{
 
-   const result = await this.docClient.query({
+    const result = await this.docClient.query({
       TableName: this.todoTable,
-      IndexName: this.indexName,
       KeyConditionExpression: "userId = :userId",
-      ExpressionAttributeValues:  {
+      ExpressionAttributeValues: {
         ":userId": userId
       }
     }).promise();
 
-    if( result.Count !== 0) {
+    if( result.Count !==0 ) {
       for(const record of result.Items){
-        const attachmentUrl =  await s3Access.getReadSignedUrl(record.todoId);
+        const attachmentUrl =  s3Access.getReadSignedUrl(record.todoId);
         record.attachmentUrl = attachmentUrl;
       }
     }
@@ -53,30 +52,34 @@ export class TodoAccess{
   }
 
   async getTodoById(todoId: string): Promise<TodoItem>{
-    const result = await this.docClient.get({
+    const result = await this.docClient.query({
       TableName: this.todoTable,
-      Key: {
-        "todoId":todoId
+      IndexName: this.indexName,
+      KeyConditionExpression: "todoId = :todoId",
+      ExpressionAttributeValues: {
+        ":todoId": todoId
       }
     }).promise();
 
-    if( !result.Item){
+    if( result.Count == 0){
       logger.error('Todo with give id not found', {todoId: todoId});
       throw new CustomError(404, 'Todo with given id not found');
     }
 
-    const item  = result.Item as TodoItem;
+    const item  = result.Items[0] as TodoItem;
+    logger.info('TODO item exists',{item: item});
     item.attachmentUrl = s3Access.getReadSignedUrl(todoId);
     return item;
   }
 
 
-  async updateTodo(todoId:string, item: UpdateTodoRequest): Promise<any>{
+  async updateTodo(todoId:string, item: UpdateTodoRequest, userId: string): Promise<any>{
 
     await this.docClient.update({
       TableName: this.todoTable,
       Key: {
-        todoId: todoId
+        todoId: todoId,
+        userId: userId
       },
       UpdateExpression: " SET #name= :name , dueDate = :dueDate, done = :done ",
       ExpressionAttributeValues: {
@@ -93,13 +96,13 @@ export class TodoAccess{
   }
 
 
-  async deleteItem(todoId: string): Promise<any>{
-    // validate todo id
-    await this.getTodoById(todoId);
+  async deleteItem(todoId: string, userId: string): Promise<any>{
+  
     await this.docClient.delete({
         TableName: this.todoTable,
         Key: {
-          todoId: todoId
+          todoId: todoId,
+          userId: userId
         }
       }).promise();
   }
