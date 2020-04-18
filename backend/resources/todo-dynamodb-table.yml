@@ -9,12 +9,14 @@ Resources:
         - AttributeName: todoId
           AttributeType: S
       KeySchema:
-        - AttributeName: todoId
+        - AttributeName: userId
           KeyType: HASH
+        - AttributeName: todoId
+          KeyType: RANGE
       GlobalSecondaryIndexes:
         - IndexName: ${self:provider.environment.INDEX_NAME}
           KeySchema:
-            - AttributeName: userId
+            - AttributeName: todoId
               KeyType: HASH
           Projection:
             ProjectionType: ALL

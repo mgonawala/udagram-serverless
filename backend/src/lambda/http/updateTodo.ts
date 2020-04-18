@@ -2,17 +2,18 @@ import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 import {TodoItem} from "../../models/TodoItem";
 import {createLogger} from "../../utils/logger";
-import {getStatusCode} from "../utils";
+import {getStatusCode, getUserId} from "../utils";
 import {udpateTodo} from "../../businessLogic/todos";
 
 const logger = createLogger('update-todo')
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
+  const userId = getUserId(event);
   const todoId: string = event.pathParameters.todoId
   const parsedBody: TodoItem = JSON.parse(event.body)
 
   try {
-    await udpateTodo(todoId, parsedBody);
+    await udpateTodo(todoId, parsedBody, userId);
     logger.info('Todo item updated successfully',{item: parsedBody});
     return {
       statusCode: 200,
