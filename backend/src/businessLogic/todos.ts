@@ -39,18 +39,35 @@ export async function createTodo(todoRequest: CreateTodoRequest, event: APIGatew
   return result;
 }
 
-export async function udpateTodo(todoId: string, updateRequest: UpdateTodoRequest): Promise<any>{
+export async function udpateTodo(todoId: string, updateRequest: UpdateTodoRequest, userId: string): Promise<any>{
   // validate todo id
-  await getTodoById(todoId);
-  await todoAccess.updateTodo(todoId, updateRequest);
+  const item = await getTodoById(todoId);
+  if( item.userId !== userId)
+    {
+      logger.error('Authorization error',{
+        error: 'User is not authorized to permorm udate on Item',
+        todoId: todoId,
+        userId: userId
+      });
+      throw new CustomError(409,'User is not authorized to perform update operation');
+    }
+  await todoAccess.updateTodo(todoId, updateRequest, userId);
 
 }
 
-export async function deleteTodo(todoId: string): Promise<any>{
+export async function deleteTodo(todoId: string, userId: string): Promise<any>{
   //validate todo id
-  await getTodoById(todoId);
+  const item = await getTodoById(todoId);
+  if( item.userId !== userId){
+    logger.error('Authorization error',{
+      error: 'User is not authorized to permorm delete on Item',
+      todoId: todoId,
+      userId: userId
+    });
+    throw new CustomError(409,'User is not authorized to delete update operation');
+  }
   // Delete item
-  await todoAccess.deleteItem(todoId);
+  await todoAccess.deleteItem(todoId, userId);
 }
 
 export async function getTodoById(todoId : string){
